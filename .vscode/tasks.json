@@ -1,0 +1,102 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Arduino: Compile (Uno)",
+      "type": "shell",
+      "command": "arduino-cli",
+      "args": [
+        "compile",
+        "--fqbn",
+        "${input:fqbn}",
+        "${workspaceFolder}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Arduino: Upload (Uno)",
+      "type": "shell",
+      "command": "arduino-cli",
+      "args": [
+        "upload",
+        "-p",
+        "${input:port}",
+        "--fqbn",
+        "${input:fqbn}",
+        "${workspaceFolder}"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Arduino: Monitor",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/k",
+        "arduino-cli monitor -p ${input:port} -c baudrate=${input:baud} --raw"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true,
+        "clear": false,
+        "close": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Arduino: List Boards",
+      "type": "shell",
+      "command": "arduino-cli",
+      "args": [
+        "board",
+        "list"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Arduino: Build + Upload + Monitor",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/k",
+        "taskkill /IM arduino-cli.exe /F >nul 2>&1 & timeout /t 1 >nul & arduino-cli compile --fqbn ${input:fqbn} \"${workspaceFolder}\" && arduino-cli upload -p ${input:port} --fqbn ${input:fqbn} \"${workspaceFolder}\" && timeout /t 2 >nul && arduino-cli monitor -p ${input:port} -c baudrate=${input:baud} --raw"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true,
+        "clear": false,
+        "close": false
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "port",
+      "type": "promptString",
+      "description": "Serial port for Arduino Uno (example: COM3)",
+      "default": "COM7"
+    },
+    {
+      "id": "baud",
+      "type": "promptString",
+      "description": "Serial monitor baud rate (must match Serial.begin)",
+      "default": "9600"
+    },
+    {
+      "id": "fqbn",
+      "type": "pickString",
+      "description": "Board FQBN",
+      "default": "arduino:avr:uno",
+      "options": [
+        "arduino:avr:uno"
+      ]
+    }
+  ]
+}
